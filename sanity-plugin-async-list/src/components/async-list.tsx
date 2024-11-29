@@ -4,45 +4,63 @@ import {set, type StringInputProps, unset} from 'sanity'
 
 import type {AsyncListPluginConfig} from '..'
 
-// Confirm array being returned will work with Autocomplete
-function validArray(arr: unknown) {
-  if (!Array.isArray(arr)) {
-    return false
-  }
+// More robust type for validation
+interface OptionsItem {
+  value: string
+  [key: string]: unknown
+}
+
+// Autocomplete options validation
+function isValidList(arr: unknown): arr is OptionsItem[] {
   return (
+    Array.isArray(arr) &&
     arr.length > 0 &&
-    arr.every((item) => typeof item === 'object' && item !== null && item.hasOwnProperty('value'))
+    arr.every((item) => typeof item === 'object' && item !== null && 'value' in item)
   )
 }
+
 export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
-  const [data, setData] = useState<Array<{value: string} & Record<string, unknown>> | null>(null)
+  const [data, setData] = useState<OptionsItem[] | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<null | Error>(null)
+  const [error, setError] = useState<Error | null>(null)
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch(options.url, {headers: options.headers ?? {}})
+      // Reset previous error state
+      setError(null)
+      setLoading(true)
 
+      // Fetch with configurable headers
+      const response = await fetch(options.url, {
+        headers: options.headers ?? {},
+      })
+
+      // Parse JSON
       let result = await response.json()
 
+      // Optional transformation
       if (options.transform) {
         result = options.transform(result)
       }
 
-      if (validArray(result)) {
+      // Validate and set data
+      if (isValidList(result)) {
         setData(result)
       } else {
         console.error(
-          'sanity-plugin-async-list: Problem with passed data, do you need to use the `transform` function?',
+          'sanity-plugin-async-list data error - use `transform` to make data match options from @sanity/ui Autocomplete https://www.sanity.io/ui/docs/component/autocomplete',
           result,
         )
-        setError(new Error('Error parsing data, check console for more info.'))
+        setError(new Error('Error with list data. Check console for more info.'))
       }
-      setLoading(false)
     } catch (e) {
-      console.error(e)
-      //   setError(e instanceof Error ? e : new Error(String(e)))
-      setError(new Error('Error fetching data, check console for more info.'))
+      const errorMessage =
+        e instanceof Error ? e.message : 'An unknown error occurred while fetching data'
+
+      console.error('sanity-plugin-async-list Fetch Error:', errorMessage)
+      setError(new Error('Error fetching list, check console for more info'))
+    } finally {
+      // Ensure loading state is always updated
       setLoading(false)
     }
   }, [options])
@@ -51,10 +69,13 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     fetchData()
   }, [fetchData])
 
+  // Memoized change handler
   const handleChange = useCallback(
     (value?: string) => props.onChange(value ? set(value) : unset()),
     [props],
   )
+
+  // Render loading state
   if (loading) {
     return (
       <Card>
@@ -65,14 +86,16 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     )
   }
 
+  // Render error state
   if (error) {
-    const readOnly = {
+    const readOnlyProps = {
       ...props,
       elementProps: {...props.elementProps, readOnly: true},
     }
+
     return (
       <Card>
-        {readOnly.renderDefault(readOnly)}
+        {readOnlyProps.renderDefault(readOnlyProps)}
         <Card tone="critical" padding={2}>
           <Text size={1}>{error.message}</Text>
         </Card>
@@ -80,6 +103,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     )
   }
 
+  // Render autocomplete
   return (
     <Card>
       {data && (
