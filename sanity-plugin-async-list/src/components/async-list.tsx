@@ -4,7 +4,7 @@ import {set, type StringInputProps, unset} from 'sanity'
 
 import type {AsyncListPluginConfig} from '..'
 
-// More robust type for validation
+// Object for Autocomplpete's `options` prop
 interface OptionsItem {
   value: string
   [key: string]: unknown
@@ -57,7 +57,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
       const errorMessage =
         e instanceof Error ? e.message : 'An unknown error occurred while fetching data'
 
-      console.error('sanity-plugin-async-list Fetch Error:', errorMessage)
+      console.error('sanity-plugin-async-list fetch error:', errorMessage)
       setError(new Error('Error fetching list, check console for more info'))
     } finally {
       // Ensure loading state is always updated
@@ -69,7 +69,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     fetchData()
   }, [fetchData])
 
-  // Memoized change handler
+  // Set value in content lake
   const handleChange = useCallback(
     (value?: string) => props.onChange(value ? set(value) : unset()),
     [props],
