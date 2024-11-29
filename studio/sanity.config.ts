@@ -2,7 +2,24 @@ import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
-import {myPlugin} from 'sanity-plugin-async-list'
+import {asyncList} from 'sanity-plugin-async-list'
+interface DisneyCharacter {
+  _id: number
+  films: string[]
+  shortFilms: string[]
+  tvShows: string[]
+  videoGames: string[]
+  parkAttractions: string[]
+  allies: string[]
+  enemies: string[]
+  sourceUrl: string
+  name: string
+  imageUrl: string
+  createdAt: string
+  updatedAt: string
+  url: string
+  __v: number
+}
 export default defineConfig({
   name: 'default',
   title: 'delete me',
@@ -13,12 +30,20 @@ export default defineConfig({
   plugins: [
     structureTool(),
     visionTool(),
-    myPlugin({
+    asyncList({
+      schemaType: 'disneyCharacter',
       url: 'https://api.disneyapi.dev/character',
-      headers: {},
-      transform: (result) =>
+      transform: (result: {data: DisneyCharacter[]}) =>
         result.data.map((item) => {
-          return {value: item.name}
+          return {value: item.name, ...item}
+        }),
+    }),
+    asyncList({
+      schemaType: 'pokemon',
+      url: 'https://pokeapi.co/api/v2/pokemon?limit=50&offset=0',
+      transform: (result: {results: {name: string}[]}) =>
+        result.results.map((item) => {
+          return {value: item.name, ...item}
         }),
     }),
   ],

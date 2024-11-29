@@ -10,9 +10,17 @@ export default defineType({
       title: 'Title',
       type: 'string',
     }),
+    // defineField({
+    //   name: 'asyncList',
+    //   type: 'asyncList',
+    // }),
     defineField({
-      name: 'asyncList',
-      type: 'asyncList',
+      name: 'disney',
+      type: 'disneyCharacter',
+    }),
+    defineField({
+      name: 'pokemon',
+      type: 'pokemon',
     }),
     defineField({
       name: 'slug',

@@ -7,17 +7,27 @@ import {schema} from './schema-types'
 export {AsyncList}
 
 export interface AsyncListPluginConfig {
-  url: string
+  /**
+   * Field type name for list
+   */
+  schemaType: string
+  /**
+   * URL to make request to
+   */
+  url: string | URL | globalThis.Request
   /**
    * Pass request headers to the `fetch` call
    */
-  headers?: Record<string, string>
+  headers?: HeadersInit
   /**
    * Parse fetched data to extract `value`
    *
    * The sanity/ui Autocomplete component requires an array of "options" objects, each with a `value` property
+   *
+   * https://www.sanity.io/ui/docs/component/autocomplete
    */
-  transform?: (result: unknown) => Array<{value: string} & Record<string, unknown>>
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  transform?: (result: any) => Array<{value: string} & Record<string, unknown>>
   autocompleteProps?: AutocompleteProps
 }
 
@@ -34,9 +44,10 @@ export interface AsyncListPluginConfig {
  * })
  * ```
  */
-export const myPlugin = definePlugin<AsyncListPluginConfig>((config) => {
-  // eslint-disable-next-line no-console
-  console.log('hello from sanity-plugin-async-list')
+export const asyncList = definePlugin<AsyncListPluginConfig>((config) => {
+  if (!config.schemaType) {
+    throw new Error('schemaType required by async-list plugin')
+  }
   return {
     name: 'sanity-plugin-async-list',
     schema: schema(config),

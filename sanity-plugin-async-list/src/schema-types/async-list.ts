@@ -5,7 +5,7 @@ import {AsyncList} from '../components/async-list'
 
 export const asyncListType = (config: AsyncListPluginConfig): StringDefinition =>
   defineType({
-    name: 'asyncList',
+    name: config?.schemaType ?? 'asyncList',
     type: 'string',
     components: {
       input: (props) => AsyncList(props, config),
