@@ -30,6 +30,7 @@ export default defineConfig({
   plugins: [
     structureTool(),
     visionTool(),
+
     asyncList({
       schemaType: 'disneyCharacter',
       url: 'https://api.disneyapi.dev/character',
@@ -44,6 +45,23 @@ export default defineConfig({
       transform: (result: {results: {name: string}[]}) =>
         result.results.map((item) => {
           return {value: item.name, ...item}
+        }),
+      autocompleteProps: {
+        placeholder: 'Search Pokemon',
+      },
+    }),
+    // More advanced usage w/headers
+    asyncList({
+      schemaType: 'parkInfo',
+      url: 'https://developer.nps.gov/api/v1/parks?parkCode=acad',
+      fetchOptions: {
+        headers: {
+          'X-Api-Key': process.env.SANITY_STUDIO_KEY ?? '',
+        },
+      },
+      transform: (result: {data: {fullName: string}[]}) =>
+        result.data.map((item) => {
+          return {value: item.fullName, ...item}
         }),
     }),
   ],

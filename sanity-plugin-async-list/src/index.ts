@@ -1,11 +1,12 @@
 import type {AutocompleteProps} from '@sanity/ui'
+import type {AllHTMLAttributes, ClassAttributes, Ref} from 'react'
 import {definePlugin} from 'sanity'
 
 import {AsyncList} from './components/async-list'
 import {schema} from './schema-types'
 
 export {AsyncList}
-
+interface HTMLProps<T> extends AllHTMLAttributes<T>, ClassAttributes<T> {}
 export interface AsyncListPluginConfig {
   /**
    * Field type name for list
@@ -16,9 +17,9 @@ export interface AsyncListPluginConfig {
    */
   url: string | URL | globalThis.Request
   /**
-   * Pass request headers to the `fetch` call
+   * Pass through for 2nd argument to `fetch` call. Pass headers, body, etc.
    */
-  headers?: HeadersInit
+  fetchOptions?: RequestInit
   /**
    * Parse fetched data to extract `value`
    *
@@ -28,7 +29,35 @@ export interface AsyncListPluginConfig {
    */
   /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   transform?: (result: any) => Array<{value: string} & Record<string, unknown>>
-  autocompleteProps?: AutocompleteProps
+  /**
+   * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
+   */
+  autocompleteProps?: Partial<
+    AutocompleteProps<{value: string}> &
+      Omit<
+        HTMLProps<HTMLInputElement>,
+        | 'aria-activedescendant'
+        | 'aria-autocomplete'
+        | 'aria-expanded'
+        | 'aria-owns'
+        | 'as'
+        | 'autoCapitalize'
+        | 'autoComplete'
+        | 'autoCorrect'
+        | 'id'
+        | 'inputMode'
+        | 'onChange'
+        | 'onSelect'
+        | 'prefix'
+        | 'ref'
+        | 'role'
+        | 'spellCheck'
+        | 'type'
+        | 'value'
+      > & {
+        ref?: Ref<HTMLInputElement>
+      }
+  >
 }
 
 /**

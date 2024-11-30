@@ -15,6 +15,10 @@ export default defineType({
     //   type: 'asyncList',
     // }),
     defineField({
+      name: 'parks',
+      type: 'parkInfo',
+    }),
+    defineField({
       name: 'disney',
       type: 'disneyCharacter',
     }),

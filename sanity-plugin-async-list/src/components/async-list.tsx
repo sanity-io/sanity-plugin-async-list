@@ -11,7 +11,7 @@ interface OptionsItem {
 }
 
 // Autocomplete options validation
-function isValidList(arr: unknown): arr is OptionsItem[] {
+function validOptions(arr: unknown): arr is OptionsItem[] {
   return (
     Array.isArray(arr) &&
     arr.length > 0 &&
@@ -31,9 +31,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
       setLoading(true)
 
       // Fetch with configurable headers
-      const response = await fetch(options.url, {
-        headers: options.headers ?? {},
-      })
+      const response = await fetch(options.url, options.fetchOptions ?? {})
 
       // Parse JSON
       let result = await response.json()
@@ -44,7 +42,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
       }
 
       // Validate and set data
-      if (isValidList(result)) {
+      if (validOptions(result)) {
         setData(result)
       } else {
         console.error(
