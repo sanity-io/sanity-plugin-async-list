@@ -32,6 +32,7 @@ export interface AsyncListPluginConfig {
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
    */
+  // TODO: there has to be a better way to get this type
   autocompleteProps?: Partial<
     AutocompleteProps<{value: string}> &
       Omit<
