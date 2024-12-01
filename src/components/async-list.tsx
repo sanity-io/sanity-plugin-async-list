@@ -30,7 +30,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
       setError(null)
       setLoading(true)
 
-      // Fetch with configurable headers
+      // Fetch url, maybe with additional fetchOptions
       const response = await fetch(options.url, options.fetchOptions ?? {})
 
       // Parse JSON
