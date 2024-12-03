@@ -1,3 +1,4 @@
+// import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Card, Flex, Spinner, Text} from '@sanity/ui'
 import {type JSX, useCallback, useEffect, useState} from 'react'
 import {set, type StringInputProps, unset} from 'sanity'
@@ -18,12 +19,18 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
     arr.every((item) => typeof item === 'object' && item !== null && 'value' in item)
   )
 }
-
+// const pluginConfigKeys = [
+//   {
+//     key: 'apiKey',
+//     title: 'Your secret API key',
+//   },
+// ]
 export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
+  // const namespace = `async-list-${options.schemaType}`
+  // const {secrets} = useSecrets(namespace)
   const [data, setData] = useState<OptionsItem[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
-
   const fetchData = useCallback(async () => {
     try {
       // Reset previous error state
