@@ -13,22 +13,9 @@ export interface AsyncListPluginConfig {
    */
   schemaType: string
   /**
-   * URL to make request to
+   * Fetch data and return options for the sanity/ui Autocomplete component
    */
-  url: string | URL | globalThis.Request
-  /**
-   * Pass through for 2nd argument to `fetch` call. Pass headers, body, etc.
-   */
-  fetchOptions?: RequestInit
-  /**
-   * Parse fetched data to extract `value`
-   *
-   * The sanity/ui Autocomplete component requires an array of "options" objects, each with a `value` property
-   *
-   * https://www.sanity.io/ui/docs/component/autocomplete
-   */
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  transform?: (result: any) => Array<{value: string} & Record<string, unknown>>
+  loader: () => Promise<Array<{value: string} & Record<string, unknown>>>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
    */

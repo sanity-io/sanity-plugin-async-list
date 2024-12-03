@@ -30,24 +30,16 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
       setError(null)
       setLoading(true)
 
-      // Fetch url, maybe with additional fetchOptions
-      const response = await fetch(options.url, options.fetchOptions ?? {})
-
-      // Parse JSON
-      let result = await response.json()
-
-      // Optional transformation
-      if (options.transform) {
-        result = options.transform(result)
-      }
+      // Call user provided data loader
+      const loaderData = await options.loader()
 
       // Validate and set data
-      if (validOptions(result)) {
-        setData(result)
+      if (validOptions(loaderData)) {
+        setData(loaderData)
       } else {
         console.error(
-          'sanity-plugin-async-list data error - use `transform` to make data match options from @sanity/ui Autocomplete https://www.sanity.io/ui/docs/component/autocomplete',
-          result,
+          'sanity-plugin-async-list data error - data must match options from @sanity/ui Autocomplete https://www.sanity.io/ui/docs/component/autocomplete',
+          loaderData,
         )
         setError(new Error('Error with list data. Check console for more info.'))
       }
