@@ -13,9 +13,23 @@ export interface AsyncListPluginConfig {
    */
   schemaType: string
   /**
+   * Declare secrets needed for loader
+   */
+  secrets?: {
+    namespace?: string
+    title?: string
+    keys: {
+      key: string
+      title: string
+      description?: string
+    }[]
+  }
+  /**
    * Fetch data and return options for the sanity/ui Autocomplete component
    */
-  loader: () => Promise<Array<{value: string} & Record<string, unknown>>>
+  loader: (
+    secrets?: Record<string, string>[],
+  ) => Promise<Array<{value: string} & Record<string, unknown>>>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
    */

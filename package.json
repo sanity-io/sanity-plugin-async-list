@@ -38,6 +38,7 @@
   },
   "browserslist": "extends @sanity/browserslist-config",
   "dependencies": {
+    "@sanity/icons": "^3.5.0",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/studio-secrets": "^3.0.0",
     "@sanity/ui": "^2.9.0"
