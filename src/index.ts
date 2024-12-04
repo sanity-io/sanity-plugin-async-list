@@ -28,7 +28,7 @@ export interface AsyncListPluginConfig {
    * Fetch data and return options for the sanity/ui Autocomplete component
    */
   loader: (
-    secrets?: Record<string, string>[],
+    secrets?: Record<string, string>,
   ) => Promise<Array<{value: string} & Record<string, unknown>>>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete

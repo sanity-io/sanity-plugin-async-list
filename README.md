@@ -110,7 +110,7 @@ export default defineConfig({
         placeholder: 'Search Pokemon',
       },
     }),
-    // More advanced usage w/headers
+    // More advanced usage w/secrets
     asyncList({
       schemaType: 'parkInfo',
       secrets: {

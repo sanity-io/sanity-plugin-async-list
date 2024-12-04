@@ -23,7 +23,7 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
 
 export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
   const namespace = options.secrets?.namespace ?? `async-list-${options.schemaType}`
-  const {secrets} = useSecrets<Record<string, string>[] | undefined>(namespace)
+  const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
   const [data, setData] = useState<OptionsItem[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<Error | null>(null)
