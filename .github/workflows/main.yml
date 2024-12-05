@@ -90,7 +90,7 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node }}
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile --network-timeout 1000000 # windows test timing out
       # - run: yarn test --if-present
 
   release:
