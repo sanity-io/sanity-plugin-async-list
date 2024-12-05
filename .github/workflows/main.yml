@@ -50,7 +50,7 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
-      - run: npm clean-install --legacy-peer-deps
+      - run: npm clean-install
         # Linting can be skipped
       - run: npm run lint --if-present
         if: github.event.inputs.test != 'false'
@@ -90,7 +90,7 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node }}
-      - run: npm install --legacy-peer-deps
+      - run: npm install
       - run: npm test --if-present
 
   release:
@@ -123,7 +123,7 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
-      - run: npm clean-install --legacy-peer-deps
+      - run: npm clean-install
       - run: npm audit signatures
         # Branches that will release new versions are defined in .releaserc.json
         # @TODO remove --dry-run after verifying everything is good to go
