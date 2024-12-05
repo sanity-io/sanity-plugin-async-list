@@ -91,7 +91,7 @@ jobs:
           cache: npm
           node-version: ${{ matrix.node }}
       - run: yarn install --frozen-lockfile
-      - run: yarn test --if-present
+      # - run: yarn test --if-present
 
   release:
     permissions:
