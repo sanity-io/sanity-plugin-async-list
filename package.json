@@ -1,5 +1,5 @@
 {
-  "name": "sanity-plugin-async-list",
+  "name": "@sanity/sanity-plugin-async-list",
   "version": "0.0.4",
   "description": "",
   "keywords": [
