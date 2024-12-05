@@ -50,12 +50,12 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
-      - run: npm clean-install --legacy-peer-deps
+      - run: yarn install --frozen-lockfile
         # Linting can be skipped
-      - run: npm run lint --if-present
+      - run: yarn lint
         if: github.event.inputs.test != 'false'
         # But not the build script, as semantic-release will crash if this command fails so it makes sense to test it early
-      - run: npm run prepublishOnly --if-present
+      - run: yarn prepublishOnly --if-present
 
   test:
     needs: build
@@ -90,8 +90,8 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node }}
-      - run: npm install --legacy-peer-deps
-      - run: npm test --if-present
+      - run: yarn install --frozen-lockfile
+      - run: yarn test --if-present
 
   release:
     permissions:
@@ -123,7 +123,7 @@ jobs:
         with:
           cache: npm
           node-version: lts/*
-      - run: npm clean-install --legacy-peer-deps
+      - run: yarn install --frozen-lockfile
       - run: npm audit signatures
         # Branches that will release new versions are defined in .releaserc.json
         # @TODO remove --dry-run after verifying everything is good to go
