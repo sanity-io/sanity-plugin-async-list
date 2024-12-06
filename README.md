@@ -1,37 +1,46 @@
 # sanity-plugin-async-list
-This plugin fetches data from an external API and returns that data as options in a selectable list of strings. 
+
+This plugin fetches data from an external API and returns that data as options in a selectable list of strings in your Sanity Studio.
 
 > This is a **Sanity Studio v3** plugin.
 
 ## Installation
 
 ```sh
-npm install sanity-plugin-async-list
+npm install @sanity/sanity-plugin-async-list
 ```
 
 ## Usage
+
 ### As a plugin
+
 Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
 import {defineConfig} from 'sanity'
-import {asyncList} from 'sanity-plugin-async-list'
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   //...
   plugins: [
     asyncList({
       schemaType: 'disneyCharacter', // Name of type to be used in schema definitions
-      url: 'https://api.disneyapi.dev/character', // URL to fetch against
-      transform: (result: {data: {name: string}[]}) => // Modify fetched data before showing as options
-        result.data.map((item) => {
+      // Loader function to fetch data however you prefer
+      loader: async () => {
+        const response = await fetch('https://api.disneyapi.dev/character')
+        const result: {data: {name: string}[]} = await response.json()
+
+        return result.data.map((item) => {
           return {value: item.name, ...item}
-        }),
+        })
+      },
     }),
   ],
 })
 ```
+
 Then in your schema definitions use the `schemaType` you set in `sanity.config.ts`
+
 ```ts
 // schemaTypes/post.ts
 import {defineField, defineType} from 'sanity'
@@ -47,15 +56,14 @@ export default defineType({
     }),
   ],
 })
-
-
 ```
 
 ### As a component
+
 Or access the component directly:
 
 ```ts
-import {AsyncList} from 'sanity-plugin-async-list'
+import {AsyncList} from '@sanity/sanity-plugin-async-list'
 
 defineField({
   name: 'myString',
@@ -65,69 +73,100 @@ defineField({
   },
 })
 ```
+
 ### Example configurations
+
 ```ts
 // sanity.config.ts
 import {defineConfig} from 'sanity'
-import {asyncList} from 'sanity-plugin-async-list'
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   // ...rest of config
   plugins: [
     asyncList({
-      // Basic fetch with a minimal transformation
       schemaType: 'disneyCharacter',
-      url: 'https://api.disneyapi.dev/character',
-      transform: (result: {data: {name: string}[]}) =>
-        result.data.map((item) => {
+      loader: async () => {
+        const response = await fetch('https://api.disneyapi.dev/character')
+        const result: {data: {name: string}[]} = await response.json()
+
+        return result.data.map((item) => {
           return {value: item.name, ...item}
-        }),
+        })
+      },
     }),
-    // Similarly basic fetch but passing props to the underlying Autocomplete component
+    // Passing props to Autocomplete
     asyncList({
       schemaType: 'pokemon',
-      url: 'https://pokeapi.co/api/v2/pokemon?limit=50&offset=0',
-      transform: (result: {results: {name: string}[]}) =>
-        result.results.map((item) => {
+      loader: async () => {
+        const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50&offset=0')
+        const result: {results: {name: string}[]} = await response.json()
+
+        return result.results.map((item) => {
           return {value: item.name, ...item}
-        }),
+        })
+      },
       autocompleteProps: {
         placeholder: 'Search Pokemon',
       },
     }),
-    // More advanced usage w/headers via fetchOptions
+    // More advanced usage w/secrets
     asyncList({
       schemaType: 'parkInfo',
-      url: 'https://developer.nps.gov/api/v1/parks?parkCode=acad',
-      fetchOptions: {
-        headers: {
-          'X-Api-Key': process.env.SANITY_STUDIO_KEY ?? '',
-        },
+      secrets: {
+        keys: [{key: 'token', title: 'Token'}],
       },
-      transform: (result: {data: {fullName: string}[]}) =>
-        result.data.map((item) => {
+      loader: async (secrets) => {
+        const response = await fetch('https://developer.nps.gov/api/v1/parks?parkCode=acad', {
+          headers: {
+            'X-Api-Key': secrets?.token ?? '',
+          },
+        })
+        const result: {data: {fullName: string}[]} = await response.json()
+
+        return result.data.map((item) => {
           return {value: item.fullName, ...item}
-        }),
+        })
+      },
     }),
   ],
-
-  schema: {
-    types: schemaTypes,
-  },
 })
 ```
 
 ## Options
+
 The plugin options are typed as `AsyncListPluginConfig` if you'd prefer to explore the options there.
+
 ### schemaType
-`string` - Field type name for schema definitions 
-### url
-`string | URL` - URL to fetch data from
-### fetchOptions
-`RequestInit` - Passthrough for 2nd argument to fetch request for headers, body, etc.
-### transform
-`(result: any) => Array<{value: string} & Record<string, unknown>>` - Function to drill down into fetched data and modify it before passing to the built in `Autocomplete` component. The `Autocomplete` expects an array of objects with the property `value`. You can also pass additional properties in each object to use in custom option previews with `autocompleteProps.renderOption`
+
+Field type name for schema definitions
+
+### loader
+
+`loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 1 optional argument: `secrets` which contains the values of the keys defined in `secrets.keys`
+
+### secrets
+
+`secrets` allows you to specify what secrets should be fetched using `@sanity/studio-secrets` and passed to the `loader function.
+
+```ts
+asyncList({
+  secrets: {
+    namespace: 'my-secrets-namespace' // optional - namespace for secrets previously saved with @sanity/studio-secrets
+    title: 'My title' // optional - Title for secrets management UI
+    // Define what keys will be editable in the UI. All/all previously saved secrets in the namespace will be passed to the `loader` function
+    keys: [
+      {
+        key: 'token', // required - key name for `secrets` arg passed to loader
+        title: 'Token' // optional - Title for management UI
+      }
+    ],
+  },
+}),
+```
+
 ### autocompleteProps
+
 `AutoCompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete
 
 ## License
