@@ -6,6 +6,9 @@
     "sanity",
     "sanity-plugin"
   ],
+  "repository": {
+    "url": "https://github.com/sanity-io/sanity-plugin-async-list"
+  },
   "license": "MIT",
   "author": "Chris LaRocque <chris.larocque@sanity.io>",
   "sideEffects": false,
