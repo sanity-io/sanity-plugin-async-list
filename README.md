@@ -7,7 +7,7 @@ This plugin fetches data from an external API and returns that data as options i
 ## Installation
 
 ```sh
-npm install sanity-plugin-async-list
+npm install @sanity/sanity-plugin-async-list
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ Add it as a plugin in `sanity.config.ts` (or .js):
 
 ```ts
 import {defineConfig} from 'sanity'
-import {asyncList} from 'sanity-plugin-async-list'
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   //...
@@ -63,7 +63,7 @@ export default defineType({
 Or access the component directly:
 
 ```ts
-import {AsyncList} from 'sanity-plugin-async-list'
+import {AsyncList} from '@sanity/sanity-plugin-async-list'
 
 defineField({
   name: 'myString',
@@ -79,7 +79,7 @@ defineField({
 ```ts
 // sanity.config.ts
 import {defineConfig} from 'sanity'
-import {asyncList} from 'sanity-plugin-async-list'
+import {asyncList} from '@sanity/sanity-plugin-async-list'
 
 export default defineConfig({
   // ...rest of config
@@ -130,10 +130,6 @@ export default defineConfig({
       },
     }),
   ],
-
-  schema: {
-    types: schemaTypes,
-  },
 })
 ```
 
@@ -150,6 +146,7 @@ Field type name for schema definitions
 `loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 1 optional argument: `secrets` which contains the values of the keys defined in `secrets.keys`
 
 ### secrets
+`secrets` allows you to specify what secrets should be fetched using `sanity-studio-secrets` and passed to the `loader function.
 
 ```ts
 asyncList({
