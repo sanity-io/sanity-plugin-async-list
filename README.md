@@ -146,13 +146,15 @@ Field type name for schema definitions
 `loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 1 optional argument: `secrets` which contains the values of the keys defined in `secrets.keys`
 
 ### secrets
-`secrets` allows you to specify what secrets should be fetched using `sanity-studio-secrets` and passed to the `loader function.
+
+`secrets` allows you to specify what secrets should be fetched using `@sanity/studio-secrets` and passed to the `loader function.
 
 ```ts
 asyncList({
   secrets: {
     namespace: 'my-secrets-namespace' // optional - namespace for secrets previously saved with @sanity/studio-secrets
     title: 'My title' // optional - Title for secrets management UI
+    // Define what keys will be editable in the UI. All/all previously saved secrets in the namespace will be passed to the `loader` function
     keys: [
       {
         key: 'token', // required - key name for `secrets` arg passed to loader
