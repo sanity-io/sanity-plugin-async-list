@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.0.0...v1.1.0) (2024-12-06)
+
+### Features
+
+- expose secrets ([#3](https://github.com/sanity-io/sanity-plugin-async-list/issues/3)) ([f3d5049](https://github.com/sanity-io/sanity-plugin-async-list/commit/f3d50498b9f8992783cb6fd2cb6f4973b4e95b6f))
+
 ## 1.0.0 (2024-12-06)
 
 ### Features
