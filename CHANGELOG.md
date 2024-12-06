@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.1.0...v1.1.1) (2024-12-06)
+
+### Bug Fixes
+
+- package.json ([a99e8e5](https://github.com/sanity-io/sanity-plugin-async-list/commit/a99e8e5093ac2ec21d0ac74b9b0489a4f95a5213))
+
 ## [1.1.0](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.0.0...v1.1.0) (2024-12-06)
 
 ### Features
