@@ -24,12 +24,17 @@ export interface AsyncListPluginConfig {
       description?: string
     }[]
   }
+  loaderType?: 'search' | 'seed'
   /**
    * Fetch data and return options for the sanity/ui Autocomplete component
    */
-  loader: (
-    secrets?: Record<string, string>,
-  ) => Promise<Array<{value: string} & Record<string, unknown>>>
+  loader: ({
+    secrets,
+    query,
+  }: {
+    secrets?: Record<string, string>
+    query?: string
+  }) => Promise<Array<{value: string} & Record<string, unknown>> | []>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
    */
