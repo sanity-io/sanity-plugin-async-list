@@ -25,11 +25,19 @@ export interface AsyncListPluginConfig {
     }[]
   }
   /**
-   * Fetch data and return options for the sanity/ui Autocomplete component
+   * Defaults to 'seed', but 'search' will re-run the loader while passing the `query` user's type into the input
    */
-  loader: (
-    secrets?: Record<string, string>,
-  ) => Promise<Array<{value: string} & Record<string, unknown>>>
+  loaderType?: 'search' | 'seed'
+  /**
+   * Fetch data and return options for the sanity/ui Autocomplete component. When using `loaderType: 'search'` `loader` receives a `query` from user input to be used in fetching data.
+   */
+  loader: ({
+    secrets,
+    query,
+  }: {
+    secrets?: Record<string, string>
+    query?: string
+  }) => Promise<Array<{value: string} & Record<string, unknown>> | []>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
    */

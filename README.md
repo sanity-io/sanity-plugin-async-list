@@ -110,23 +110,31 @@ export default defineConfig({
         placeholder: 'Search Pokemon',
       },
     }),
-    // More advanced usage w/secrets
+    // More advanced usage w/secrets & query
     asyncList({
       schemaType: 'parkInfo',
       secrets: {
         keys: [{key: 'token', title: 'Token'}],
       },
-      loader: async (secrets) => {
-        const response = await fetch('https://developer.nps.gov/api/v1/parks?parkCode=acad', {
+      loaderType: 'search',
+      loader: async ({secrets, query}) => {
+        // Conditionally return 'all' options when no query is present
+        const url = query
+          ? `https://developer.nps.gov/api/v1/parks?q=${query}`
+          : 'https://developer.nps.gov/api/v1/parks'
+
+        const response = await fetch(url, {
           headers: {
             'X-Api-Key': secrets?.token ?? '',
           },
         })
         const result: {data: {fullName: string}[]} = await response.json()
 
-        return result.data.map((item) => {
-          return {value: item.fullName, ...item}
-        })
+        return result.data.length
+          ? result.data.map((item) => {
+              return {value: item.fullName, ...item}
+            })
+          : []
       },
     }),
   ],
@@ -141,9 +149,13 @@ The plugin options are typed as `AsyncListPluginConfig` if you'd prefer to explo
 
 Field type name for schema definitions
 
+### loaderType
+
+`loaderType` allows you to choose between 2 different behaviors for `loader`: `search` or `seed` (the default). `seed` runs the loader once when the component is rendered to populate the list of options. `search` allows you to pass the query the user types into the Autocomplete component back to your loader function to search for their query in your API.
+
 ### loader
 
-`loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 1 optional argument: `secrets` which contains the values of the keys defined in `secrets.keys`
+`loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 2 optional arguments: `secrets` which contains the values of the keys defined in `secrets.keys`, and `query` which is only passed when `loaderType` is set to `search`
 
 ### secrets
 
