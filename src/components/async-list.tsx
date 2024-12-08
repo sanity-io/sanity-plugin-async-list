@@ -1,18 +1,11 @@
-import {ApiIcon, SearchIcon} from '@sanity/icons'
+import {ApiIcon, SearchIcon, SpinnerIcon} from '@sanity/icons'
 import {SettingsView, useSecrets} from '@sanity/studio-secrets'
-import {Autocomplete, Button, Card, Flex, Spinner, Text} from '@sanity/ui'
+import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
 import {debounce} from 'lodash'
 import {type JSX, useCallback, useEffect, useState} from 'react'
 import {set, type StringInputProps, unset} from 'sanity'
 
 import type {AsyncListPluginConfig} from '..'
-
-/**
- * TODO
- * x Don't fetch initially if props.value is there
- * - Fix spinner alignment
- * - Is there just generally a better way to organize this for readability?
- */
 
 // Object for Autocomplpete's `options` prop
 interface OptionsItem {
@@ -29,7 +22,10 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
       arr.every((item) => typeof item === 'object' && item !== null && 'value' in item))
   )
 }
-
+/**
+ * TODO:
+ * - Fetches after selection
+ */
 export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
   const namespace = options.secrets?.namespace ?? `async-list-${options.schemaType}`
   const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
@@ -37,6 +33,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [showSettings, setShowSettings] = useState(false)
+  const [prevQuery, setPrevQuery] = useState<string | null>(null)
 
   const fetchData = useCallback(
     async (query?: string) => {
@@ -74,6 +71,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
   useEffect(() => {
     // Don't fetch if we expect API keys but secrets don't exist
     if (options?.secrets?.keys && !secrets) return
+    // fetch the initial data, but only if the field doesn't have a value
     if (!props.value) {
       fetchData()
     }
@@ -91,37 +89,27 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     (value?: string) => props.onChange(value ? set(value) : unset()),
     [props],
   )
-
+  // Handle searching in 'search' mode
   const handleQueryChange = useCallback(
     (query: string | null) => {
-      // console.log('query', query)
-      // console.log('typeof', query === '')
-      if (query === '' || !query) {
-        // query cleared out, fetch all data?
+      if (
+        query === '' || // User hit backspace or
+        (!query && !props.value && prevQuery) // they cleared out an existing value or query
+      ) {
         fetchData()
       }
       if (query) {
         fetchData(query)
       }
-      // otherwise query is null, which means a selection was made
+      setPrevQuery(query)
     },
-    [fetchData],
+    [fetchData, props.value, prevQuery],
   )
 
+  // Debounce query events so we don't spam the loader
   const debouncedHandler = debounce((value) => handleQueryChange(value), 300)
 
-  // Render loading state
-  // if (loading) {
-  //   return (
-  //     <Card>
-  //       <Flex justify="center">
-  //         <Spinner />
-  //       </Flex>
-  //     </Card>
-  //   )
-  // }
-
-  // Render error state
+  // Render error state as a readonly string field
   if (error) {
     const readOnlyProps = {
       ...props,
@@ -138,13 +126,38 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     )
   }
 
-  // Render autocomplete
   return (
     <Card>
       <Autocomplete
         id={`async-list-${options.schemaType}`}
+        // eslint-disable-next-line react/jsx-no-bind
         filterOption={options.loaderType === 'search' ? () => true : undefined}
-        icon={loading ? () => <Spinner size={2} /> : SearchIcon}
+        // eslint-disable-next-line react/jsx-no-bind
+        icon={
+          loading
+            ? () => (
+                <>
+                  <style>
+                    {`
+                      @keyframes spin {
+                        from {
+                          transform: rotate(0deg);
+                        }
+                        to {
+                          transform: rotate(360deg);
+                        }
+                      }
+                    `}
+                  </style>
+                  <SpinnerIcon
+                    style={{
+                      animation: 'spin 2s linear infinite',
+                    }}
+                  />
+                </>
+              )
+            : SearchIcon
+        }
         openButton
         onChange={handleChange}
         options={data ?? []}
@@ -158,6 +171,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
           title={options.secrets.title ?? 'Secrets'}
           namespace={namespace}
           keys={options.secrets?.keys}
+          // eslint-disable-next-line react/jsx-no-bind
           onClose={() => setShowSettings(false)}
         />
       )}
@@ -170,6 +184,7 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
             padding={2}
             radius="full"
             text="Manage keys"
+            // eslint-disable-next-line react/jsx-no-bind
             onClick={() => setShowSettings(true)}
           />
         </Flex>

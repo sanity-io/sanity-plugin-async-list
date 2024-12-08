@@ -24,9 +24,12 @@ export interface AsyncListPluginConfig {
       description?: string
     }[]
   }
+  /**
+   * Defaults to 'seed', but 'search' will re-run the loader while passing the `query` user's type into the input
+   */
   loaderType?: 'search' | 'seed'
   /**
-   * Fetch data and return options for the sanity/ui Autocomplete component
+   * Fetch data and return options for the sanity/ui Autocomplete component. When using `loaderType: 'search'` `loader` receives a `query` from user input to be used in fetching data.
    */
   loader: ({
     secrets,
