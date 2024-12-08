@@ -24,7 +24,8 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
 }
 /**
  * TODO:
- * - Fetches after selection
+ * - Component accidentally fetches after selection
+ * - Cache fetchData call w/o arguments
  */
 export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
   const namespace = options.secrets?.namespace ?? `async-list-${options.schemaType}`
