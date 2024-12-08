@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.1.1...v1.2.0) (2024-12-08)
+
+### Features
+
+- pass search query back to loader ([#6](https://github.com/sanity-io/sanity-plugin-async-list/issues/6)) ([7794480](https://github.com/sanity-io/sanity-plugin-async-list/commit/7794480f41a4040bddaab359071cd9769bb13ec9))
+
 ## [1.1.1](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.1.0...v1.1.1) (2024-12-06)
 
 ### Bug Fixes
