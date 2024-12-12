@@ -83,11 +83,11 @@ export const AsyncList = (
   }, [fetchData, data, secrets, options.secrets, props.value])
 
   // If config declares secrets, show settings when no secrets found by useSecrets()
-  useEffect(() => {
-    if (options.secrets) {
-      setShowSettings(!secrets)
-    }
-  }, [secrets, options.secrets])
+  // useEffect(() => {
+  //   if (options.secrets) {
+  //     setShowSettings(!secrets)
+  //   }
+  // }, [secrets, options.secrets])
 
   // Set field value in content lake
   const handleChange = useCallback(
