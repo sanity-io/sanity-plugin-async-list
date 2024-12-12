@@ -67,6 +67,7 @@ import {AsyncList} from '@sanity/sanity-plugin-async-list'
 
 defineField({
   name: 'myString',
+  type: 'string',
   components: {
     // Must pass the default props as the first argument
     input: (props) => AsyncList(props, config),

@@ -27,7 +27,11 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
  * - Component accidentally fetches after selection
  * - Cache fetchData call w/o arguments
  */
-export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfig): JSX.Element => {
+export const AsyncList = (
+  props: StringInputProps,
+  options: Omit<AsyncListPluginConfig, 'schemaType'> &
+    Partial<Pick<AsyncListPluginConfig, 'schemaType'>>,
+): JSX.Element => {
   const namespace = options.secrets?.namespace ?? `async-list-${options.schemaType}`
   const {secrets} = useSecrets<Record<string, string> | undefined>(namespace)
   const [data, setData] = useState<OptionsItem[] | null>(null)
@@ -73,10 +77,10 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
     // Don't fetch if we expect API keys but secrets don't exist
     if (options?.secrets?.keys && !secrets) return
     // fetch the initial data, but only if the field doesn't have a value
-    if (!props.value) {
+    if (!props.value && !data) {
       fetchData()
     }
-  }, [fetchData, secrets, options.secrets, props.value])
+  }, [fetchData, data, secrets, options.secrets, props.value])
 
   // If config declares secrets, show settings when no secrets found by useSecrets()
   useEffect(() => {
@@ -97,14 +101,16 @@ export const AsyncList = (props: StringInputProps, options: AsyncListPluginConfi
         query === '' || // User hit backspace or
         (!query && !props.value && prevQuery) // they cleared out an existing value or query
       ) {
-        fetchData()
+        if (!data) {
+          fetchData()
+        }
       }
       if (query) {
         fetchData(query)
       }
       setPrevQuery(query)
     },
-    [fetchData, props.value, prevQuery],
+    [fetchData, data, props.value, prevQuery],
   )
 
   // Debounce query events so we don't spam the loader
