@@ -1,6 +1,6 @@
 import type {AutocompleteProps} from '@sanity/ui'
 import type {AllHTMLAttributes, ClassAttributes, Ref} from 'react'
-import {definePlugin} from 'sanity'
+import {definePlugin, type SanityClient, type SourceClientOptions} from 'sanity'
 
 import {AsyncList} from './components/async-list'
 import {schema} from './schema-types'
@@ -25,6 +25,10 @@ export interface AsyncListPluginConfig {
     }[]
   }
   /**
+   * Config for client passed to `loader`
+   */
+  clientOptions?: SourceClientOptions
+  /**
    * Defaults to 'seed', but 'search' will re-run the loader while passing the `query` user's type into the input
    */
   loaderType?: 'search' | 'seed'
@@ -34,9 +38,11 @@ export interface AsyncListPluginConfig {
   loader: ({
     secrets,
     query,
+    client,
   }: {
     secrets?: Record<string, string>
     query?: string
+    client: SanityClient
   }) => Promise<Array<{value: string} & Record<string, unknown>> | []>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete

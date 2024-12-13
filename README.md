@@ -168,7 +168,9 @@ Field type name for schema definitions.
 
 ### loader
 
-`loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 2 optional arguments: `secrets` which contains the values of the keys defined in `secrets.keys`, and `query` which is only passed when `loaderType` is set to `search`
+`loader` allows you to get data from any source and pass it as options to the input. `loader` takes a function with 3 optional arguments: `secrets` which contains the values of the keys defined in `secrets.keys`, `client` - a preconfigured Sanity client, and `query` which is only passed when `loaderType` is set to `search`.
+
+A note on the `client` argument: there are absolutely some valid use cases for wanting to have a `client` in the `loader`, but I encourage you to be sure that your use case wouldn't be better served by a [reference field type](https://www.sanity.io/docs/reference-type) before reaching for the client in a loader.
 
 ### secrets
 
@@ -190,9 +192,13 @@ asyncList({
 }),
 ```
 
+### clientOptions
+
+Provide options for the `client` passed to `loader`.
+
 ### autocompleteProps
 
-`AutoCompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete
+`AutoCompleteProps` - Passthrough for the underlying Autocomplete component from @sanity/ui: https://www.sanity.io/ui/docs/component/autocomplete.
 
 ## License
 
