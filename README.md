@@ -58,6 +58,8 @@ export default defineType({
 })
 ```
 
+The field created by this plugin shares the same options as the default string field, with the exception of the `initialValue` and `options` properties.
+
 ### As a component
 
 Or access the component directly:

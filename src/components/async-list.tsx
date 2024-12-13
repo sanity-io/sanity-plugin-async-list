@@ -24,7 +24,6 @@ function validOptions(arr: unknown): arr is OptionsItem[] {
 }
 /**
  * TODO:
- * - Component accidentally fetches after selection
  * - Cache fetchData call w/o arguments
  */
 export const AsyncList = (
@@ -132,7 +131,9 @@ export const AsyncList = (
       </Card>
     )
   }
-
+  if (props.readOnly) {
+    return <Card>{props.renderDefault(props)}</Card>
+  }
   return (
     <Card>
       <Autocomplete
