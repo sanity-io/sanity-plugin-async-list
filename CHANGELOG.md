@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.2.1...v1.2.2) (2024-12-13)
+
+### Bug Fixes
+
+- readonly and docs on schema options ([#9](https://github.com/sanity-io/sanity-plugin-async-list/issues/9)) ([3015c15](https://github.com/sanity-io/sanity-plugin-async-list/commit/3015c150184add8e82906dc15a60cbf452c7a61f))
+
 ## [1.2.1](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.2.0...v1.2.1) (2024-12-13)
 
 ### Bug Fixes
