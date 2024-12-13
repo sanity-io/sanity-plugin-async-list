@@ -70,7 +70,17 @@ defineField({
   type: 'string',
   components: {
     // Must pass the default props as the first argument
-    input: (props) => AsyncList(props, config),
+    input: (props) =>
+      AsyncList(props, {
+        loader: async () => {
+          const response = await fetch('https://api.disneyapi.dev/character')
+          const result: {data: {name: string}[]} = await response.json()
+
+          return result.data.map((item) => {
+            return {value: item.name, ...item}
+          })
+        },
+      }),
   },
 })
 ```
@@ -148,7 +158,7 @@ The plugin options are typed as `AsyncListPluginConfig` if you'd prefer to explo
 
 ### schemaType
 
-Field type name for schema definitions
+Field type name for schema definitions.
 
 ### loaderType
 
