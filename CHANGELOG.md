@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.2.0...v1.2.1) (2024-12-13)
+
+### Bug Fixes
+
+- infinite fetch when used as component ([#7](https://github.com/sanity-io/sanity-plugin-async-list/issues/7)) ([6ff14b0](https://github.com/sanity-io/sanity-plugin-async-list/commit/6ff14b020534a1d46fc35ac67e91d0a9ef3bd820))
+
 ## [1.2.0](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.1.1...v1.2.0) (2024-12-08)
 
 ### Features
