@@ -3,7 +3,7 @@ import {SettingsView, useSecrets} from '@sanity/studio-secrets'
 import {Autocomplete, Button, Card, Flex, Text} from '@sanity/ui'
 import {debounce} from 'lodash'
 import {type JSX, useCallback, useEffect, useState} from 'react'
-import {set, type StringInputProps, unset} from 'sanity'
+import {set, type StringInputProps, unset, useClient} from 'sanity'
 
 import type {AsyncListPluginConfig} from '..'
 
@@ -38,6 +38,7 @@ export const AsyncList = (
   const [error, setError] = useState<Error | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [prevQuery, setPrevQuery] = useState<string | null>(null)
+  const client = useClient(options.clientOptions ?? {apiVersion: '2024-12-12'})
 
   const fetchData = useCallback(
     async (query?: string) => {
@@ -47,7 +48,7 @@ export const AsyncList = (
         setLoading(true)
 
         // Call user provided data loader
-        const loaderData = await options.loader({secrets, query})
+        const loaderData = await options.loader({secrets, query, client})
 
         // Validate and set data
         if (validOptions(loaderData)) {
@@ -69,7 +70,7 @@ export const AsyncList = (
         setLoading(false)
       }
     },
-    [options, secrets],
+    [options, secrets, client],
   )
 
   useEffect(() => {
