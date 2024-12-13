@@ -1,6 +1,6 @@
 import type {AutocompleteProps} from '@sanity/ui'
 import type {AllHTMLAttributes, ClassAttributes, Ref} from 'react'
-import {definePlugin, SanityClient, type SourceClientOptions} from 'sanity'
+import {definePlugin, type SanityClient, type SourceClientOptions} from 'sanity'
 
 import {AsyncList} from './components/async-list'
 import {schema} from './schema-types'
@@ -42,7 +42,7 @@ export interface AsyncListPluginConfig {
   }: {
     secrets?: Record<string, string>
     query?: string
-    client?: SanityClient
+    client: SanityClient
   }) => Promise<Array<{value: string} & Record<string, unknown>> | []>
   /**
    * Passthrough for Autocomplete component. Use to create custom item previews, modify search behavior, etc. https://www.sanity.io/ui/docs/component/autocomplete
