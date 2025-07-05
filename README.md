@@ -4,7 +4,7 @@ This plugin fetches data from an external API and returns that data as options i
 
 > This is a **Sanity Studio v3** plugin.
 
-![screenshot of async-list plugin creating a field](./assets/async-list-screenshot.png 'async-list in action')
+![screenshot of async-list plugin creating a field](https://raw.githubusercontent.com/sanity-io/sanity-plugin-async-list/87b958a76fb2c81cbe798679520004ed01708e17/assets/async-list-screenshot.png 'async-list in action')
 
 ## Installation
 
