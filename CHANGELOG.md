@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.2](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.3.1...v1.3.2) (2025-07-10)
+
+### Bug Fixes
+
+- **deps:** allow studio v4 in peer dep ranges ([2926c2f](https://github.com/sanity-io/sanity-plugin-async-list/commit/2926c2f53c256aea7f6c6e53b6fe3667a5735d6c))
+
 ## [1.3.1](https://github.com/sanity-io/sanity-plugin-async-list/compare/v1.3.0...v1.3.1) (2025-04-04)
 
 ### Bug Fixes
